@@ -7,6 +7,7 @@ import { BASE_URL } from "../App";
 
 const TodoItem = ({ todo }: { todo: Todo }) => {
   const queryClient = useQueryClient();
+
   const { mutate: updateTodo, isPending: isUpdating } = useMutation({
     mutationKey: ["updateTodo"],
     mutationFn: async () => {
@@ -19,6 +20,28 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+    },
+  });
+
+  const { mutate: deleteTodo, isPending: isDeleting } = useMutation({
+    mutationKey: ["deleteTodo"],
+    mutationFn: async () => {
+      try {
+        const res = await fetch(BASE_URL + `/todos/${todo._id}`, {
+          method: "DELETE",
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+
         return data;
       } catch (error) {
         console.log(error);
@@ -66,8 +89,9 @@ const TodoItem = ({ todo }: { todo: Todo }) => {
           {!isUpdating && <FaCheckCircle size={20} />}
           {isUpdating && <Spinner size={"sm"} />}
         </Box>
-        <Box color={"red.500"} cursor={"pointer"}>
-          <MdDelete size={25} />
+        <Box color={"red.500"} cursor={"pointer"} onClick={() => deleteTodo()}>
+          {!isDeleting && <MdDelete size={25} />}
+          {isDeleting && <Spinner size={"sm"} />}
         </Box>
       </Flex>
     </Flex>
