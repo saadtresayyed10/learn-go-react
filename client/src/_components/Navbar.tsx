@@ -2,7 +2,7 @@ import { Box, Flex, Text, Container } from "@chakra-ui/react";
 
 export default function Navbar() {
   return (
-    <Container maxW={"900px"}>
+    <Container maxW={"900px"} bg="gray.700" rounded="lg" mt="6">
       <Box px={4} my={4} borderRadius={"5"}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           {/* LEFT SIDE */}
