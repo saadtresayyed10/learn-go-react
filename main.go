@@ -32,7 +32,7 @@ func main() {
 		}
 	}
 
-	MONGO_URI := os.Getenv("MONGO_URI")
+	MONGO_URI := os.Getenv("MONGODB_URI")
 	clientOptions := options.Client().ApplyURI(MONGO_URI)
 	client, err := mongo.Connect(context.Background(), clientOptions)
 
